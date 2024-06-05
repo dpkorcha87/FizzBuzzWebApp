@@ -1,0 +1,54 @@
+﻿@model FizzBuzz
+<h1>Fizz Buzz App</h1>
+@Html.Label("Please enter array of integer values by comma separated:")
+@Html.TextBoxFor(m => m.Value)
+
+<button onclick="Process()">Submit</button>
+<br/>
+<br/>
+<table>
+    <thead>
+        <tr>
+            <th>Number</th>
+            <th>Result</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts{
+<script type="text/javascript">
+
+    function Process() {
+        var _data = {
+            "Value": $('#Value').val(),
+
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/FizzBuzz/Process_Data',
+            data: JSON.stringify(_data),
+            contentType: 'application/json',
+            dataType: "JSON",
+            success: function(response) {
+              var res='';
+              for (let i = 0; i < response.length; i++) {
+      res +=
+                '<tr>'+
+                    '<td>'+response[i].number+'</td>'+
+                    '<td>'+response[i].response+'</td>'+
+
+               '</tr>';
+    }
+$('tbody').html(res);
+
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+            }
+        });
+    }
+</script>
+}
+
